@@ -44,8 +44,8 @@ public class MemberController extends HttpServlet {
 		String nextPage = null;
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html;charset=utf-8");
-		String action = request.getPathInfo(); // 브라우저에서 요청한 요청명을 얻음. /addmember.do 등...
-		System.out.println("action:" + action);
+		String action = request.getPathInfo();//request.getPathInfo()->브라우저에서 요청한 요청명(url)을 얻음/addmember.do등...
+		System.out.println("action:" + action);   
 		// 최초 요청이거나 /listMembers.do 면 회원 정보 출력 하라 
 		if (action == null || action.equals("/listMembers.do")) {
 		// 컨트롤러가 요청을 받아서 memberDAO의 listMembers() 메소드 호출 후 다시 membersList로 회원 정보 받기.
@@ -53,15 +53,14 @@ public class MemberController extends HttpServlet {
 			request.setAttribute("membersList", membersList); // request = 사용자의 요청 
 			nextPage = "/test03/listMembers.jsp"; // test03의 listMemebers.jsp로 포워딩
 		} else if (action.equals("/addMember.do")) { // 회원 정보 추가를 요청할 시
-			 // 회원가입 창에서 입력한 정보를 getParemeter로 얻는다.
-			String id = request.getParameter("id");
+			String id = request.getParameter("id");	// 회원가입 창에서 입력한 정보를 getParemeter로 얻는다.
 			String pwd = request.getParameter("pwd");
 			String name = request.getParameter("name");
 			String email = request.getParameter("email");
-			// getParameter로 얻은 후 MemberVO 세팅 (id, pwd, name, email)
+			// getParameter로 얻은 정보를 MemberVO 세팅 (id, pwd, name, email)
 			MemberVO memberVO = new MemberVO(id, pwd, name, email); 
 			// MemberVO(id, pwd, name, email) 세팅 후 memberDAO.addMember() 메소드로 전달.
-			memberDAO.addMember(memberVO);
+			memberDAO.addMember(memberVO); // 틀에 맞춰진 정보들을 DAO로 넘겨서 DAO에서 쿼리를 실행한다.
 			request.setAttribute("msg", "addMember");
 			nextPage = "/member/listMembers.do";    // 회원 정보 추가 페이지로 이동.
 		} else if (action.equals("/memberForm.do")) { // 회원 가입 창을 요청

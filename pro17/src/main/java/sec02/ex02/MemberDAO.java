@@ -18,7 +18,7 @@ public class MemberDAO {
 	private PreparedStatement pstmt;
 
 	public MemberDAO() {
-		try {
+		try {  // DB와 연결
 			Context ctx = new InitialContext();
 			Context envContext = (Context) ctx.lookup("java:/comp/env");
 			dataFactory = (DataSource) envContext.lookup("jdbc/oracle");
@@ -27,7 +27,7 @@ public class MemberDAO {
 		}
 	}
 
-	 // listMembers() = 컨트롤러가 불러서 실행됨.  -> select문으로 모든 회원 정보 조회 
+	 // listMembers() = 컨트롤러가 불러서 실행됨.  -> select문으로 모든 회원 정보 조회 메소드
 	  // 그 후에 membersList로 반응 ( 호출한 곳 )
 	public List<MemberVO> listMembers() {
 		List<MemberVO> membersList = new ArrayList();
@@ -67,8 +67,8 @@ public class MemberDAO {
 			String email = m.getEmail();
 			String query = "INSERT INTO t_member(id, pwd, name, email)" + " VALUES(?, ? ,? ,?)";
 			System.out.println(query);
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, id);
+			pstmt = conn.prepareStatement(query); // 쿼리 실행
+			pstmt.setString(1, id); // 각 물음표에 번호 맞춰서 들어감
 			pstmt.setString(2, pwd);
 			pstmt.setString(3, name);
 			pstmt.setString(4, email);
@@ -83,25 +83,25 @@ public class MemberDAO {
 	public MemberVO findMember(String _id) {
 		MemberVO memInfo = null;
 		try {
-			conn = dataFactory.getConnection();
-			String query = "select * from  t_member where id=?";
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, _id);
+			conn = dataFactory.getConnection(); // DB 연결
+			String query = "select * from  t_member where id=?"; // id를 조건으로 select 쿼리 지정
+			pstmt = conn.prepareStatement(query); // 
+			pstmt.setString(1, _id); // id 입력됨
 			System.out.println(query);
-			ResultSet rs = pstmt.executeQuery();
+			ResultSet rs = pstmt.executeQuery(); // 쿼리 실행
 			rs.next();
-			String id = rs.getString("id");
+			String id = rs.getString("id"); // 추출된 정보들을 변수로 받음
 			String pwd = rs.getString("pwd");
 			String name = rs.getString("name");
 			String email = rs.getString("email");
 			Date joinDate = rs.getDate("joinDate");
-			memInfo = new MemberVO(id, pwd, name, email, joinDate);
+			memInfo = new MemberVO(id, pwd, name, email, joinDate); // VO 틀에 맞춤
 			pstmt.close();
 			conn.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return memInfo;
+		return memInfo; // 틀에 맞춰진 값을 반환
 	}
 
 	public void modMember(MemberVO memberVO) {
