@@ -67,25 +67,29 @@ public class BoardController extends HttpServlet {
 				articlesList = boardService.listArticles();
 				request.setAttribute("articlesList", articlesList);
 				nextPage = "/board02/listArticles.jsp";
+			
 			} else if (action.equals("/listArticles.do")) {
 				articlesList = boardService.listArticles();
 				request.setAttribute("articlesList", articlesList);
 				nextPage = "/board02/listArticles.jsp";
-			} else if (action.equals("/articleForm.do")) {
-				nextPage = "/board02/articleForm.jsp";
-			} else if (action.equals("/addArticle.do")) {
-				Map<String, String> articleMap = upload(request, response);
-				String title = articleMap.get("title");
+			
+			} else if (action.equals("/articleForm.do")) { // action 값이 = articleForm.do 이면
+				nextPage = "/board02/articleForm.jsp"; // 브라우저 창에 글쓰기 창이 나타난다 ( DB 로직 없음 )
+			
+			} else if (action.equals("/addArticle.do")) { // 글쓰기 창에서 정보 입력 후 글쓰기 버튼 누르면
+				
+				Map<String, String> articleMap = upload(request, response); // upload()메소드로 글쓰기 정보를 Map으로 반환받음
+				String title = articleMap.get("title"); // key를 입력해서 값을 가져옴
 				String content = articleMap.get("content");
 				String imageFileName = articleMap.get("imageFileName");
 
-				articleVO.setParentNO(0);
+				articleVO.setParentNO(0); // articlesVO에 글정보를 세팅
 				articleVO.setId("hong");
 				articleVO.setTitle(title);
 				articleVO.setContent(content);
 				articleVO.setImageFileName(imageFileName);
-				boardService.addArticle(articleVO);
-				nextPage = "/board/listArticles.do";
+				boardService.addArticle(articleVO); // boardService의 addArticle()메소드로 글정보를 전달
+				nextPage = "/board/listArticles.do"; // 추가한 새 글까지 리스트로 보인다. 
 			}
 
 			RequestDispatcher dispatch = request.getRequestDispatcher(nextPage);
@@ -95,25 +99,27 @@ public class BoardController extends HttpServlet {
 		}
 	}
 
+	// 업로드 정보를 upload 하고
 	private Map<String, String> upload(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Map<String, String> articleMap = new HashMap<String, String>();
+		Map<String, String> articleMap = new HashMap<String, String>();// 같이 전송된 파라미터를 맵에 key/value로 저장
 		String encoding = "utf-8";
-		File currentDirPath = new File(ARTICLE_IMAGE_REPO);
+		File currentDirPath = new File(ARTICLE_IMAGE_REPO); // 파일 업로드 경로
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		factory.setRepository(currentDirPath);
 		factory.setSizeThreshold(1024 * 1024);
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		try {
-			List items = upload.parseRequest(request);
+			List items = upload.parseRequest(request); // 전송된 아이템 가져옴
 			for (int i = 0; i < items.size(); i++) {
 				FileItem fileItem = (FileItem) items.get(i);
-				if (fileItem.isFormField()) {
+				if (fileItem.isFormField()) { // isFormField이면 입력한 값을 얻는다.
 					System.out.println(fileItem.getFieldName() + "=" + fileItem.getString(encoding));
+					                        // 전송된 파라미터를 key/value로 Map에 저장한다.
 					articleMap.put(fileItem.getFieldName(), fileItem.getString(encoding));
 				} else {
-					System.out.println("�Ķ���͸�:" + fileItem.getFieldName());
-					//System.out.println("���ϸ�:" + fileItem.getName());
-					System.out.println("����ũ��:" + fileItem.getSize() + "bytes");
+					System.out.println("파라미터이름:" + fileItem.getFieldName());
+					//System.out.println("파일이름:" + fileItem.getName());
+					System.out.println("파일크기:" + fileItem.getSize() + "bytes");
 					//articleMap.put(fileItem.getFieldName(), fileItem.getName());
 					if (fileItem.getSize() > 0) {
 						int idx = fileItem.getName().lastIndexOf("\\");
@@ -121,11 +127,12 @@ public class BoardController extends HttpServlet {
 							idx = fileItem.getName().lastIndexOf("/");
 						}
 
-						String fileName = fileItem.getName().substring(idx + 1);
-						System.out.println("���ϸ�:" + fileName);
-						articleMap.put(fileItem.getFieldName(), fileName);  //�ͽ��÷η����� ���ε� ������ ��� ���� �� map�� ���ϸ� ����
+						// 익스플로러에서는 업로드시 업로드 경로까지 저장되기 때문에 
+						String fileName = fileItem.getName().substring(idx + 1); // 파일명을 구하기
+						System.out.println("파일명:" + fileName);
+						articleMap.put(fileItem.getFieldName(), fileName);  //익스플로러에서 업로드 파일의 경로 제거 후 map에 파일명 저장
 						File uploadFile = new File(currentDirPath + "\\" + fileName);
-						fileItem.write(uploadFile);
+						fileItem.write(uploadFile); // 파일명을 write() 메소드 호출해서 업로드한다.
 
 					} // end if
 				} // end if

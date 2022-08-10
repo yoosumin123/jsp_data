@@ -23,8 +23,8 @@
 	    obj.submit();
      }
  
-	 function fn_enable(obj){
-		 document.getElementById("i_title").disabled=false;
+	 function fn_enable(obj){ // 수정하기 클릭 시 텍스트 박스를 활성화시킨다
+		 document.getElementById("i_title").disabled=false; // 텍스트박스 id로 접근해 disabled 속성을 false로 설정
 		 document.getElementById("i_content").disabled=false;
 		 document.getElementById("i_imageFileName").disabled=false;
 		 document.getElementById("tr_btn_modify").style.display="block";

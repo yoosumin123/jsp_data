@@ -13,6 +13,7 @@ public class BoardService {
 		return articlesList;
 	}
 	
+	// 정수를 반환 int 
 	public int addArticle(ArticleVO article){
 		return boardDAO.insertNewArticle(article);		
 	}

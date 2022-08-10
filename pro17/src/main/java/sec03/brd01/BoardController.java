@@ -49,7 +49,7 @@ public class BoardController extends HttpServlet {
 		String nextPage = "";
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
-		String action = request.getPathInfo();
+		String action = request.getPathInfo(); // 액션값을 얻음
 		System.out.println("action:" + action);
 		try {
 			List<ArticleVO> articlesList = new ArrayList<ArticleVO>();
@@ -57,8 +57,8 @@ public class BoardController extends HttpServlet {
 				articlesList = boardService.listArticles();
 				request.setAttribute("articlesList", articlesList);
 				nextPage = "/board01/listArticles.jsp";
-			} else if (action.equals("/listArticles.do")) { // 실행하려면 이 주소로 
-				articlesList = boardService.listArticles(); // 얘가 서비스를 건드린다 -> 서비스는 DAO를 건드린다
+			} else if (action.equals("/listArticles.do")) { // action = listArticles.do 이면
+				articlesList = boardService.listArticles(); // boardService의 listArticles() 메소드 호출 ->값 반환받기
 				request.setAttribute("articlesList", articlesList);
 				nextPage = "/board01/listArticles.jsp";
 			}

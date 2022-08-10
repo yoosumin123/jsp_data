@@ -29,7 +29,7 @@ public class BoardDAO {
 	public List selectAllArticles() {
 		List articlesList = new ArrayList();
 		try {
-			conn = dataFactory.getConnection();           // 서비스 -> DAO 가서 밑 쿼리 가져와라 
+			conn = dataFactory.getConnection();          // 계층형 SQL문 실행
 			String query = "SELECT LEVEL,articleNO,parentNO,title,content,id,writeDate" 
 			             + " from t_board"
 					     + " START WITH  parentNO=0" + " CONNECT BY PRIOR articleNO=parentNO"
@@ -38,14 +38,14 @@ public class BoardDAO {
 			pstmt = conn.prepareStatement(query);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				int level = rs.getInt("level");
+				int level = rs.getInt("level"); 
 				int articleNO = rs.getInt("articleNO");
 				int parentNO = rs.getInt("parentNO");
 				String title = rs.getString("title");
 				String content = rs.getString("content");
 				String id = rs.getString("id");
 				Date writeDate = rs.getDate("writeDate");
-				ArticleVO article = new ArticleVO();
+				ArticleVO article = new ArticleVO();  // 글 정보를 ArticlesVO 에 세팅
 				article.setLevel(level);
 				article.setArticleNO(articleNO);
 				article.setParentNO(parentNO);
@@ -53,7 +53,7 @@ public class BoardDAO {
 				article.setContent(content);
 				article.setId(id);
 				article.setWriteDate(writeDate);
-				articlesList.add(article);
+				articlesList.add(article); // VO 틀에 맞게 세팅된 글 정보(article)를 articlesList에 넣기
 			}
 			rs.close();
 			pstmt.close();

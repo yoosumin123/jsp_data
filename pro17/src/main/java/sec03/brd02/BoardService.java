@@ -14,7 +14,7 @@ public class BoardService {
 	}
 	
 	public void addArticle(ArticleVO article){
-		boardDAO.insertNewArticle(article);		
+		boardDAO.insertNewArticle(article);		// 다시 boardDAO의 insertNewArticle() 메소드로 전달
 	}
 
 }

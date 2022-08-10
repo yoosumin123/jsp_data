@@ -50,7 +50,7 @@ public class FileDownloadController extends HttpServlet {
 		byte[] buffer = new byte[1024 * 8];
 		while (true) {
 			int count = in.read(buffer);
-			if (count == -1)
+			 if (count == -1)
 				break;
 			out.write(buffer, 0, count);
 		}

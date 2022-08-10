@@ -64,30 +64,36 @@ public class BoardController extends HttpServlet {
 		System.out.println("action:" + action);
 		try {
 			List<ArticleVO> articlesList = new ArrayList<ArticleVO>();
+			
 			if (action == null) {
 				articlesList = boardService.listArticles();
 				request.setAttribute("articlesList", articlesList);
 				nextPage = "/board02/listArticles.jsp";
+			
 			} else if (action.equals("/listArticles.do")) {
 				articlesList = boardService.listArticles();
 				request.setAttribute("articlesList", articlesList);
 				nextPage = "/board02/listArticles.jsp";
+			
 			} else if (action.equals("/articleForm.do")) {
 				nextPage = "/board02/articleForm.jsp";
+			
 			} else if (action.equals("/addArticle.do")) {
 				int articleNO=0;
+				// 수정된 글정보와 첨부된 이미지파일이름을 articleMap으로 반환 받는다.
 				Map<String, String> articleMap = upload(request, response);
 				String title = articleMap.get("title");
 				String content = articleMap.get("content");
 				String imageFileName = articleMap.get("imageFileName");
-				articleVO.setParentNO(0);
+				articleVO.setParentNO(0); // Map에서 글정보를 가져와서 articleVO에 세팅한다.
 				articleVO.setId("hong");
 				articleVO.setTitle(title);
-				articleVO.setContent(content);
+				articleVO.setContent(content); 
 				articleVO.setImageFileName(imageFileName);
-				articleNO= boardService.addArticle(articleVO);
+				 
+				articleNO= boardService.addArticle(articleVO);// 테이블에 새 글 추가후 새글 번호 가져옴
 				
-				if(imageFileName!=null && imageFileName.length()!=0) {
+				if(imageFileName!=null && imageFileName.length()!=0) { // 파일을 첨부한 경우
 				    File srcFile = new 	File(ARTICLE_IMAGE_REPO +"\\"+"temp"+"\\"+imageFileName);
 					File destDir = new File(ARTICLE_IMAGE_REPO +"\\"+articleNO);
 					destDir.mkdirs();
@@ -95,7 +101,7 @@ public class BoardController extends HttpServlet {
 				}
 				PrintWriter pw = response.getWriter();
 				pw.print("<script>" 
-				         +"  alert('������ �߰��߽��ϴ�.');" 
+				         +"  alert('새글을 추가했습니다.');" 
 						 +" location.href='"+request.getContextPath()+"/board/listArticles.do';"
 				         +"</script>");
 

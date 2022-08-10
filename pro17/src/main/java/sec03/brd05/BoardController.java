@@ -67,12 +67,15 @@ public class BoardController extends HttpServlet {
 				articlesList = boardService.listArticles();
 				request.setAttribute("articlesList", articlesList);
 				nextPage = "/board04/listArticles.jsp";
+			
 			} else if (action.equals("/listArticles.do")) {
 				articlesList = boardService.listArticles();
 				request.setAttribute("articlesList", articlesList);
 				nextPage = "/board04/listArticles.jsp";
+			
 			} else if (action.equals("/articleForm.do")) {
 				nextPage = "/board04/articleForm.jsp";
+			
 			} else if (action.equals("/addArticle.do")) {
 				int articleNO = 0;
 				Map<String, String> articleMap = upload(request, response);
@@ -85,7 +88,9 @@ public class BoardController extends HttpServlet {
 				articleVO.setTitle(title);
 				articleVO.setContent(content);
 				articleVO.setImageFileName(imageFileName);
+				
 				articleNO = boardService.addArticle(articleVO);
+				
 				if (imageFileName != null && imageFileName.length() != 0) {
 					File srcFile = new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName);
 					File destDir = new File(ARTICLE_IMAGE_REPO + "\\" + articleNO);
@@ -94,29 +99,31 @@ public class BoardController extends HttpServlet {
 					srcFile.delete();
 				}
 				PrintWriter pw = response.getWriter();
-				pw.print("<script>" + "  alert('»õ±ÛÀ» Ãß°¡Çß½À´Ï´Ù.');" + " location.href='" + request.getContextPath()
+				pw.print("<script>" + "  alert('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.');" + " location.href='" + request.getContextPath()
 						+ "/board/listArticles.do';" + "</script>");
 
 				return;
+			
 			} else if (action.equals("/viewArticle.do")) {
 				String articleNO = request.getParameter("articleNO");
 				articleVO = boardService.viewArticle(Integer.parseInt(articleNO));
 				request.setAttribute("article", articleVO);
 				nextPage = "/board04/viewArticle.jsp";
-			} else if (action.equals("/modArticle.do")) {
-				Map<String, String> articleMap = upload(request, response);
+			
+			} else if (action.equals("/modArticle.do")) { // ìˆ˜ì • ë°˜ì˜í•˜ê¸° í´ë¦­ ì‹œ modArticle.do ìš”ì²­
+				Map<String, String> articleMap = upload(request, response);// ìˆ˜ì •ëœ ê¸€ì •ë³´ì™€ ì²¨ë¶€ëœ ì´ë¯¸ì§€íŒŒì¼ì´ë¦„ì„ articleMapìœ¼ë¡œ ë°›ìŒ
 				int articleNO = Integer.parseInt(articleMap.get("articleNO"));
 				articleVO.setArticleNO(articleNO);
 				String title = articleMap.get("title");
 				String content = articleMap.get("content");
 				String imageFileName = articleMap.get("imageFileName");
-				articleVO.setParentNO(0);
+				articleVO.setParentNO(0); // Mapì—ì„œ ê¸€ì •ë³´ë¥¼ ê°€ì ¸ì™€ì„œ articleVOì— ì„¸íŒ…í•œë‹¤.
 				articleVO.setId("hong");
 				articleVO.setTitle(title);
 				articleVO.setContent(content);
 				articleVO.setImageFileName(imageFileName);
-				boardService.modArticle(articleVO);
-				if (imageFileName != null && imageFileName.length() != 0) {
+				boardService.modArticle(articleVO); // boardServiceì˜ modArticle() ë©”ì†Œë“œë¡œ articleVOë¥¼ ì „ë‹¬.
+				if (imageFileName != null && imageFileName.length() != 0) { // ìˆ˜ì • ì´ë¯¸ì§€ë¥¼ ì²¨ë¶€í•œ ê²½ìš°
 					String originalFileName = articleMap.get("originalFileName");
 					File srcFile = new File(ARTICLE_IMAGE_REPO + "\\" + "temp" + "\\" + imageFileName);
 					File destDir = new File(ARTICLE_IMAGE_REPO + "\\" + articleNO);
@@ -124,10 +131,10 @@ public class BoardController extends HttpServlet {
 					FileUtils.moveFileToDirectory(srcFile, destDir, true);
 					;
 					File oldFile = new File(ARTICLE_IMAGE_REPO + "\\" + articleNO + "\\" + originalFileName);
-					oldFile.delete();
+					oldFile.delete(); // ê¸°ì¡´ì— ìˆë˜ ì´ë¯¸ì§€íŒŒì¼ì„ ì‚­ì œí•œë‹¤
 				}
 				PrintWriter pw = response.getWriter();
-				pw.print("<script>" + "  alert('±ÛÀ» ¼öÁ¤Çß½À´Ï´Ù.');" + " location.href='" + request.getContextPath()
+				pw.print("<script>" + "  alert('ê¸€ì„ ìˆ˜ì •í–ˆìŠµë‹ˆë‹¤;" + " location.href='" + request.getContextPath()
 						+ "/board/viewArticle.do?articleNO=" + articleNO + "';" + "</script>");
 				return;
 			}
@@ -156,9 +163,9 @@ public class BoardController extends HttpServlet {
 					System.out.println(fileItem.getFieldName() + "=" + fileItem.getString(encoding));
 					articleMap.put(fileItem.getFieldName(), fileItem.getString(encoding));
 				} else {
-					System.out.println("ÆÄ¶ó¹ÌÅÍ¸í:" + fileItem.getFieldName());
-					//System.out.println("ÆÄÀÏ¸í:" + fileItem.getName());
-					System.out.println("ÆÄÀÏÅ©±â:" + fileItem.getSize() + "bytes");
+					System.out.println("ï¿½Ä¶ï¿½ï¿½ï¿½Í¸ï¿½:" + fileItem.getFieldName());
+					//System.out.println("ï¿½ï¿½ï¿½Ï¸ï¿½:" + fileItem.getName());
+					System.out.println("ï¿½ï¿½ï¿½ï¿½Å©ï¿½ï¿½:" + fileItem.getSize() + "bytes");
 					//articleMap.put(fileItem.getFieldName(), fileItem.getName());
 					if (fileItem.getSize() > 0) {
 						int idx = fileItem.getName().lastIndexOf("\\");
@@ -167,8 +174,8 @@ public class BoardController extends HttpServlet {
 						}
 
 						String fileName = fileItem.getName().substring(idx + 1);
-						System.out.println("ÆÄÀÏ¸í:" + fileName);
-						articleMap.put(fileItem.getFieldName(), fileName);  //ÀÍ½ºÇÃ·Î·¯¿¡¼­ ¾÷·Îµå ÆÄÀÏÀÇ °æ·Î Á¦°Å ÈÄ map¿¡ ÆÄÀÏ¸í ÀúÀå
+						System.out.println("ï¿½ï¿½ï¿½Ï¸ï¿½:" + fileName);
+						articleMap.put(fileItem.getFieldName(), fileName);  //ï¿½Í½ï¿½ï¿½Ã·Î·ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ mapï¿½ï¿½ ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½
 						File uploadFile = new File(currentDirPath + "\\temp\\" + fileName);
 						fileItem.write(uploadFile);
 

@@ -81,8 +81,9 @@ public class BoardDAO {
 		return 0;
 	}
 
+	// 정수를 반환 int
 	public int insertNewArticle(ArticleVO article) {
-		int articleNO = getNewArticleNO();
+		int articleNO = getNewArticleNO(); // 새글 번호 얻어온다 ( 이전 가장 높은 번호 +1)
 		try {
 			conn = dataFactory.getConnection();
 			int parentNO = article.getParentNO();
@@ -90,6 +91,7 @@ public class BoardDAO {
 			String content = article.getContent();
 			String id = article.getId();
 			String imageFileName = article.getImageFileName();
+			// insert문을 이용해서 새글 추가한다.
 			String query = "INSERT INTO t_board (articleNO, parentNO, title, content, imageFileName, id)"
 					+ " VALUES (?, ? ,?, ?, ?, ?)";
 			System.out.println(query);
@@ -107,7 +109,7 @@ public class BoardDAO {
 			e.printStackTrace();
 		}
 		
-		return articleNO;
+		return articleNO; // controller의 articleNo로 반환한다.
 	}
 
 }

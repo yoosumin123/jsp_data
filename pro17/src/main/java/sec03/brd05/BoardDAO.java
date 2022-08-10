@@ -127,7 +127,7 @@ public class BoardDAO {
 			int parentNO = rs.getInt("parentNO");
 			String title = rs.getString("title");
 			String content = rs.getString("content");
-			String imageFileName = URLEncoder.encode(rs.getString("imageFileName"), "UTF-8"); //�����̸��� Ư�����ڰ� ���� ��� ���ڵ��մϴ�.
+			String imageFileName = URLEncoder.encode(rs.getString("imageFileName"), "UTF-8"); //�����̸��� Ư�����ڰ� ���� ��� ���ڵ��մϴ�.
 			String id = rs.getString("id");
 			Date writeDate = rs.getDate("writeDate");
 
@@ -148,15 +148,16 @@ public class BoardDAO {
 	}
 
 	public void updateArticle(ArticleVO article) {
-		int articleNO = article.getArticleNO();
+		int articleNO = article.getArticleNO(); // articleVO에서 get으로 글정보를 가져온다
 		String title = article.getTitle();
 		String content = article.getContent();
 		String imageFileName = article.getImageFileName();
 		try {
 			conn = dataFactory.getConnection();
+			// update문을 이용해서 해당 글번호에 대해서 글정보를 수정한다
 			String query = "update t_board  set title=?,content=?";
-			if (imageFileName != null && imageFileName.length() != 0) {
-				query += ",imageFileName=?";
+			if (imageFileName != null && imageFileName.length() != 0) { // 이미지 파일 첨부한경우
+				query += ",imageFileName=?"; // imageFileName 컬럼을 추가한다
 			}
 			query += " where articleNO=?";
 			

@@ -29,8 +29,9 @@ public class BoardService {
 	}
 
 	public List<Integer> removeArticle(int  articleNO) {
+		// 삭제한 글, 자식 글에대한 글 번호를 모두 얻는다. - 이미지도 삭제해야 한다.
 		List<Integer> articleNOList = boardDAO.selectRemovedArticles(articleNO);
-		boardDAO.deleteArticle(articleNO);
+		boardDAO.deleteArticle(articleNO); // boardDAO의 deleteArticle()메소드로 글번호 전달
 		return articleNOList;
 	}
 

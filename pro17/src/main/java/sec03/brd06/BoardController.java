@@ -130,7 +130,8 @@ public class BoardController extends HttpServlet {
 						+ "/board/viewArticle.do?articleNO=" + articleNO + "';" + "</script>");
 				return;
 			} else if (action.equals("/removeArticle.do")) {
-				int articleNO = Integer.parseInt(request.getParameter("articleNO"));
+				int articleNO = Integer.parseInt(request.getParameter("articleNO")); //삭제하기 클릭시 전송된 글번호를 얻음
+				// boardService의 removeArticle() 메소드를 호출하면서 글번호를 전달한다.
 				List<Integer> articleNOList = boardService.removeArticle(articleNO);
 				for (int _articleNO : articleNOList) {
 					File imgDir = new File(ARTICLE_IMAGE_REPO + "\\" + _articleNO);

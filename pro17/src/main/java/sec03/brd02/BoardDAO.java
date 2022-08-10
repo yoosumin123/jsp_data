@@ -66,12 +66,12 @@ public class BoardDAO {
 	private int getNewArticleNO() {
 		try {
 			conn = dataFactory.getConnection();
-			String query = "SELECT  max(articleNO) from t_board ";
+			String query = "SELECT  max(articleNO) from t_board "; // 기본 글 번호 중 가장 큰 번호를 조회
 			System.out.println(query);
 			pstmt = conn.prepareStatement(query);
 			ResultSet rs = pstmt.executeQuery(query);
 			if (rs.next())
-				return (rs.getInt(1) + 1);
+				return (rs.getInt(1) + 1); // 1을 더해주고 리턴한다.
 			rs.close();
 			pstmt.close();
 			conn.close();
@@ -81,15 +81,17 @@ public class BoardDAO {
 		return 0;
 	}
 
+	// 새 글 추가 메소드
 	public void insertNewArticle(ArticleVO article) {
 		try {
 			conn = dataFactory.getConnection();
-			int articleNO = getNewArticleNO();
+			int articleNO = getNewArticleNO(); // 새 글에 대한 글 번호 가져옴 ( 기존 가장 큰 번호에 + 1 )
 			int parentNO = article.getParentNO();
 			String title = article.getTitle();
 			String content = article.getContent();
 			String id = article.getId();
 			String imageFileName = article.getImageFileName();
+			// insert문으로 새 글 추가
 			String query = "INSERT INTO t_board (articleNO, parentNO, title, content, imageFileName, id)"
 					+ " VALUES (?, ? ,?, ?, ?, ?)";
 			System.out.println(query);

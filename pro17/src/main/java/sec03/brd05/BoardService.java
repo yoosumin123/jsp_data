@@ -24,8 +24,8 @@ public class BoardService {
 		return article;
 	}
 	
-	public void modArticle(ArticleVO article) {
-		boardDAO.updateArticle(article);
+	public void modArticle(ArticleVO article) { // ArticleVO를 전달받아서 
+		boardDAO.updateArticle(article); // boardDAO 의 updateArticle()메소드로 전달
 	}
 
 }
